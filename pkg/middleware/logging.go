@@ -23,7 +23,7 @@ func Logging(next http.Handler) http.Handler {
 
 		statusCode := lrw.Status()
 		if shouldPrintToStderr(statusCode) {
-			latency := time.Now().Sub(start).Seconds()
+			latency := time.Since(start).Seconds()
 			request_id := r.Header.Get("X-Request-Id")
 
 			log.Printf("request-id: %s, latency: %fs, status code: %d, %s %s", request_id, latency, statusCode, r.Method, r.URL)

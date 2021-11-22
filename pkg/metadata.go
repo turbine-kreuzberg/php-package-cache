@@ -69,7 +69,7 @@ func loadMetadata(ctx context.Context, name string) (*Metadata, error) {
 }
 
 func fetchMetadata(ctx context.Context, name string) ([]byte, error) {
-	span, ctx := opentracing.StartSpanFromContext(ctx, "fetch metadata")
+	span, _ := opentracing.StartSpanFromContext(ctx, "fetch metadata")
 	defer span.Finish()
 
 	url := fmt.Sprintf("https://packagist.org/p2/%s.json", name)

@@ -115,6 +115,9 @@ func run(c *cli.Context) error {
 	svc = middleware.Timeout(10*time.Minute, svc)
 
 	err = serverHttp(svc, c.String(addr.Name))
+	if err != nil {
+		return fmt.Errorf("run http server: %v", err)
+	}
 
 	return nil
 }

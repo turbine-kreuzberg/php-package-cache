@@ -170,7 +170,7 @@ func cache(ctx context.Context, o *adapter.ObjectStorage, key, url string) error
 
 // Caller is required to cleanup the returned file.
 func fetchFile(ctx context.Context, url string) (*os.File, error) {
-	span, ctx := opentracing.StartSpanFromContext(ctx, "download file")
+	span, _ := opentracing.StartSpanFromContext(ctx, "download file")
 	defer span.Finish()
 
 	client := httpClient()
@@ -195,7 +195,11 @@ func fetchFile(ctx context.Context, url string) (*os.File, error) {
 	if err != nil {
 		return nil, err
 	}
-	tmp.Seek(0, os.SEEK_SET)
+
+	_, err = tmp.Seek(0, io.SeekStart)
+	if err != nil {
+		return nil, err
+	}
 
 	return tmp, nil
 }
