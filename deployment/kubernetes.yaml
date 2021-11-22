@@ -1,0 +1,63 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: php-package-cache
+  labels:
+    app: php-package-cache
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: php-package-cache
+  template:
+    metadata:
+      labels:
+        app: php-package-cache
+    spec:
+      containers:
+        - name: php-package-cache
+          image: ghcr.io/turbine-kreuzberg/php-package-cache:latest
+          args:
+            - server
+            - --s3-endpoint=minio:9000
+            - --s3-access-key-file=/secret/minio/MINIO_ACCESS_KEY
+            - --s3-secret-key-file=/secret/minio/MINIO_SECRET_KEY
+            - --s3-ssl=false
+            - --s3-bucket=php-package-cache
+          env:
+            - name: JAEGER_AGENT_HOST
+              value: jaeger
+            - name: JAEGER_AGENT_PORT
+              value: "6831"
+          ports:
+            - name: service
+              containerPort: 8080
+          readinessProbe:
+            httpGet:
+              path: /healthz/ready
+              port: 8080
+          livenessProbe:
+            httpGet:
+              path: /healthz/alive
+              port: 8080
+          volumeMounts:
+            - name: minio
+              mountPath: "/secret/minio"
+              readOnly: true
+      volumes:
+        - name: minio
+          secret:
+            secretName: minio-credentials
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: php-package-cache
+spec:
+  selector:
+    app: php-package-cache
+  ports:
+    - name: http
+      port: 8080

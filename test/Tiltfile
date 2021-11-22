@@ -1,0 +1,8 @@
+
+k8s_yaml('kubernetes.yaml')
+k8s_resource('e2e-test', resource_deps=['php-package-cache'])
+
+docker_build(
+  ref='e2e-test-image',
+  context='.',
+)

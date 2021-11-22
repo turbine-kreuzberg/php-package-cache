@@ -1,0 +1,91 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: prometheus
+spec:
+  ports:
+    - name: prometheus
+      port: 9000
+  selector:
+    app: prometheus
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: prometheus
+spec:
+  selector:
+    matchLabels:
+      app: prometheus
+  strategy:
+    type: Recreate
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: prometheus
+    spec:
+      containers:
+        - name: prometheus
+          image: quay.io/prometheus/prometheus:v2.31.0@sha256:bad0c4a275e7cf46635fd215676a8d0066f73f577bb11e7de9a9a452f0b5fd97
+          args:
+            - --config.file=/config/prometheus.yml
+            - --storage.tsdb.path=/prometheus
+            - --web.console.libraries=/usr/share/prometheus/console_libraries
+            - --web.console.templates=/usr/share/prometheus/consoles
+          ports:
+            - containerPort: 9090
+              name: web
+              protocol: TCP
+          resources:
+            limits:
+              cpu: 200m
+              memory: 5Gi
+            requests:
+              cpu: 200m
+              memory: 5Gi
+          livenessProbe:
+            httpGet:
+              path: /-/healthy
+              port: web
+          readinessProbe:
+            httpGet:
+              path: /-/ready
+              port: web
+          volumeMounts:
+            - mountPath: /prometheus
+              name: data
+            - mountPath: /config
+              name: config
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: prometheus
+        - name: config
+          configMap:
+            name: prometheus-config
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: prometheus
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 3Gi
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: prometheus-config
+data:
+  prometheus.yml: |
+    global:
+      scrape_interval: 15s
+    scrape_configs:
+      - job_name: prometheus
+        static_configs:
+          - targets:
+              - php-package-cache:8080
