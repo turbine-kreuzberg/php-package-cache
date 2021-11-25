@@ -22,14 +22,48 @@ var (
 	gitRef  string
 )
 
-var addr = &cli.StringFlag{Name: "addr", Value: ":8080", Usage: "Address to serve on."}
-var s3_endpoint = &cli.StringFlag{Name: "s3-endpoint", Required: true, Usage: "s3 endpoint."}
-var s3_access_key_file = &cli.StringFlag{Name: "s3-access-key-file", Required: true, Usage: "Path to s3 access key."}
-var s3_secret_key_file = &cli.StringFlag{Name: "s3-secret-key-file", Required: true, Usage: "Path to s3 secret access key."}
-var s3_ssl = &cli.BoolFlag{Name: "s3-ssl", Value: true, Usage: "s3 uses SSL."}
-var s3_location = &cli.StringFlag{Name: "s3-location", Value: "us-east-1", Usage: "s3 bucket location."}
-var s3_bucket = &cli.StringFlag{Name: "s3-bucket", Required: true, Usage: "s3 bucket name."}
-var upstream_endpoint = &cli.StringFlag{Name: "upstream-endpoint", Value: "", Usage: "Notify service endpoint."}
+var addr = &cli.StringFlag{
+	Name:    "addr",
+	EnvVars: []string{"ADDR"},
+	Value:   ":8080",
+	Usage:   "Address to serve on.",
+}
+var s3_endpoint = &cli.StringFlag{
+	Name:     "s3-endpoint",
+	EnvVars:  []string{"S3_ENDPOINT"},
+	Required: true,
+	Usage:    "s3 endpoint.",
+}
+var s3_access_key_file = &cli.StringFlag{
+	Name:     "s3-access-key-file",
+	EnvVars:  []string{"S3_ACCESS_KEY_FILE"},
+	Required: true,
+	Usage:    "Path to s3 access key.",
+}
+var s3_secret_key_file = &cli.StringFlag{
+	Name:     "s3-secret-key-file",
+	EnvVars:  []string{"S3_SECRET_KEY_FILE"},
+	Required: true,
+	Usage:    "Path to s3 secret access key.",
+}
+var s3_ssl = &cli.BoolFlag{
+	Name:    "s3-ssl",
+	EnvVars: []string{"S3_SSL"},
+	Value:   true,
+	Usage:   "s3 uses SSL.",
+}
+var s3_location = &cli.StringFlag{
+	Name:    "s3-location",
+	EnvVars: []string{"S3_LOCATION"},
+	Value:   "us-east-1",
+	Usage:   "s3 bucket location.",
+}
+var s3_bucket = &cli.StringFlag{
+	Name:     "s3-bucket",
+	EnvVars:  []string{"S3_BUCKET"},
+	Required: true,
+	Usage:    "s3 bucket name.",
+}
 
 func main() {
 	app := &cli.App{
@@ -48,7 +82,6 @@ func main() {
 					s3_ssl,
 					s3_location,
 					s3_bucket,
-					upstream_endpoint,
 				},
 				Action: run,
 			},
