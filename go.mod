@@ -3,7 +3,7 @@ module github.com/turbine-kreuzberg/php-package-cache
 go 1.17
 
 require (
-	github.com/aws/aws-sdk-go v1.42.22
+	github.com/aws/aws-sdk-go v1.42.23
 	github.com/gorilla/mux v1.8.0
 	github.com/opentracing/opentracing-go v1.2.0
 	github.com/prometheus/client_golang v1.11.0
