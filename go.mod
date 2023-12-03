@@ -4,7 +4,7 @@ go 1.17
 
 require (
 	github.com/aws/aws-sdk-go v1.43.43
-	github.com/gorilla/mux v1.8.0
+	github.com/gorilla/mux v1.8.1
 	github.com/opentracing/opentracing-go v1.2.0
 	github.com/prometheus/client_golang v1.12.1
 	github.com/uber/jaeger-client-go v2.29.1+incompatible
