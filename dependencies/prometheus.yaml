@@ -27,7 +27,7 @@ spec:
     spec:
       containers:
         - name: prometheus
-          image: quay.io/prometheus/prometheus:v2.34.0@sha256:b37103e03399e90c9b7b1b2940894d3634915cf9df4aa2e5402bd85b4377808c
+          image: quay.io/prometheus/prometheus:v2.51.1@sha256:dec2018ae55885fed717f25c289b8c9cff0bf5fbb9e619fb49b6161ac493c016
           args:
             - --config.file=/config/prometheus.yml
             - --storage.tsdb.path=/prometheus
