@@ -27,7 +27,7 @@ COPY pkg ./pkg
 RUN go install .
 
 # production image ############################################
-FROM alpine:3.15.4@sha256:4edbd2beb5f78b1014028f4fbb99f3237d9561100b6881aabbf5acce2c4f9454 AS prod
+FROM alpine:3.24.4@sha256:93b41ef40b1677fce8fcc64ff4af09daddfacf5040afde618bc46c1e2d1cc7d4 AS prod
 RUN apk add --no-cache ca-certificates
 
 # tracing config
